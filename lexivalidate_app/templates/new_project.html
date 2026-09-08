@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}New project{% endblock %}
+{% block content %}
+<div class="narrow">
+  <h1>New project</h1>
+  <form method="post" enctype="multipart/form-data">
+    <label>Project name
+      <input type="text" name="name" required>
+    </label>
+    <label>Description (optional)
+      <input type="text" name="description">
+    </label>
+    <label>Lexicon file (.xlsx or .csv)
+      <input type="file" name="lexicon_file" accept=".xlsx,.csv" required>
+    </label>
+    <p class="muted small">
+      Expected columns (any order, header names are matched loosely): English, French,
+      GPT Ewe, GPT Twi, Confidence, Sentiment, POS, Comments.
+    </p>
+    <button type="submit">Create project</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Disagreements{% endblock %}
+{% block content %}
+<h1>Disagreements - {{ project.name }}</h1>
+{% if not entries %}
+<p class="muted">No unresolved disagreements right now.</p>
+{% else %}
+<table>
+  <thead><tr><th>Entry</th><th>English</th><th>GPT Ewe</th><th></th></tr></thead>
+  <tbody>
+    {% for e in entries %}
+    <tr>
+      <td>{{ e.id }}</td>
+      <td>{{ e.english }}</td>
+      <td>{{ e.gpt_ewe }}</td>
+      <td><a href="{{ url_for('adjudicate', project_id=project.id, entry_id=e.id) }}">adjudicate</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

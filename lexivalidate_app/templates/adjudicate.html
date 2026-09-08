@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Adjudicate entry {{ entry.id }}{% endblock %}
+{% block content %}
+<h1>Adjudicate entry {{ entry.id }}</h1>
+<h2>{{ entry.english }}</h2>
+<p class="muted">Machine-generated Ewe: {{ entry.gpt_ewe }}</p>
+
+<h3>Annotator responses</h3>
+<table>
+  <thead><tr><th>Annotator</th><th>Choice</th><th>Correction</th><th>Comment</th></tr></thead>
+  <tbody>
+    {% for a in annotations %}
+    <tr>
+      <td>{{ a.user.username }}</td>
+      <td>{{ a.choice }}</td>
+      <td>{{ a.correction or "-" }}</td>
+      <td>{{ a.comment or "-" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h3>Final decision</h3>
+<form method="post">
+  <div class="choices">
+    {% for c in ["correct", "understandable", "incorrect", "uncertain"] %}
+    <label class="choice">
+      <input type="radio" name="final_choice" value="{{ c }}" required>
+      {{ c }}
+    </label>
+    {% endfor %}
+  </div>
+  <label>Final Ewe translation
+    <input type="text" name="final_translation">
+  </label>
+  <label>Note
+    <input type="text" name="note">
+  </label>
+  <button type="submit">Save decision</button>
+</form>
+{% endblock %}

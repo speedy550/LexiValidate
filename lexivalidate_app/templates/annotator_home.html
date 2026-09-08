@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}My projects{% endblock %}
+{% block content %}
+<h1>My projects</h1>
+{% if not projects %}
+<p class="muted">You haven't been assigned to a project yet. Ask your project admin to add you.</p>
+{% else %}
+<ul class="plain-list">
+  {% for p in projects %}
+  <li>
+    <a href="{{ url_for('annotate', project_id=p.id) }}">{{ p.name }}</a>
+    <span class="muted"> - {{ progress[p.id][0] }} / {{ progress[p.id][1] }} reviewed</span>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

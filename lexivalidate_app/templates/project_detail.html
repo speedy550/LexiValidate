@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ project.name }}</h1>
+  <a class="btn" href="{{ url_for('export_project', project_id=project.id) }}">Export CSV</a>
+</div>
+{% if project.description %}<p class="muted">{{ project.description }}</p>{% endif %}
+
+<p>{{ annotated }} of {{ total }} entries have at least one annotation.
+{% if disagreements %}
+  <a href="{{ url_for('disagreements', project_id=project.id) }}">{{ disagreements }} entr{{ 'y' if disagreements == 1 else 'ies' }} in disagreement</a>.
+{% else %}
+  No disagreements flagged yet.
+{% endif %}
+</p>
+
+<h2>Annotators</h2>
+{% if not annotators %}
+<p class="muted">No annotator accounts yet. Add some under <a href="{{ url_for('manage_users') }}">Users</a>.</p>
+{% else %}
+<ul class="checklist">
+  {% for u in annotators %}
+  <li>
+    <form method="post" action="{{ url_for('assign_user', project_id=project.id) }}">
+      <input type="hidden" name="user_id" value="{{ u.id }}">
+      <label>
+        <input type="checkbox" onchange="this.form.submit()" {% if u.id in assigned_ids %}checked{% endif %}>
+        {{ u.username }} ({{ u.role }})
+      </label>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

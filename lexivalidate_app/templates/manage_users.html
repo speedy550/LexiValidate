@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<h1>Users</h1>
+<table>
+  <thead><tr><th>Username</th><th>Role</th></tr></thead>
+  <tbody>
+    {% for u in users %}
+    <tr><td>{{ u.username }}</td><td>{{ u.role }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Add a user</h2>
+<div class="narrow">
+  <form method="post">
+    <label>Username <input type="text" name="username" required></label>
+    <label>Temporary password <input type="text" name="password" required></label>
+    <label>Role
+      <select name="role">
+        <option value="annotator">annotator</option>
+        <option value="adjudicator">adjudicator</option>
+        <option value="admin">admin</option>
+      </select>
+    </label>
+    <button type="submit">Create</button>
+  </form>
+</div>
+{% endblock %}

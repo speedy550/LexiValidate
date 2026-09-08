@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} - annotate{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ project.name }}</h1>
+  <span class="muted">{{ done_count }} / {{ total }} reviewed</span>
+</div>
+
+{% if entry is none %}
+<p>You've reviewed every entry currently in this project. Nice work.</p>
+<a href="{{ url_for('dashboard') }}">Back to my projects</a>
+{% else %}
+<div class="card">
+  <p class="entry-ref">Entry {{ entry.id }}{% if entry.source_ref is not none %} (row {{ entry.source_ref }}){% endif %}</p>
+  <h2>{{ entry.english or "-" }}</h2>
+  {% if entry.french %}<p class="muted">French: {{ entry.french }}</p>{% endif %}
+
+  <div class="ewe-box">
+    <p class="label">Machine-generated Ewe translation</p>
+    <p class="ewe">{{ entry.gpt_ewe or "(none proposed)" }}</p>
+  </div>
+
+  {% if entry.gpt_twi or entry.confidence or entry.ai_comment %}
+  <details>
+    <summary>AI notes</summary>
+    <p class="small">
+      {% if entry.gpt_twi %}Twi: {{ entry.gpt_twi }}<br>{% endif %}
+      {% if entry.confidence %}Confidence: {{ entry.confidence }}<br>{% endif %}
+      {% if entry.ai_sentiment %}Sentiment: {{ entry.ai_sentiment }}<br>{% endif %}
+      {% if entry.ai_pos %}Part of speech: {{ entry.ai_pos }}<br>{% endif %}
+      {% if entry.ai_comment %}Comment: {{ entry.ai_comment }}{% endif %}
+    </p>
+  </details>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('submit_annotation', project_id=project.id, entry_id=entry.id) }}">
+    <p class="label">Is this translation linguistically and culturally appropriate?</p>
+    <div class="choices">
+      {% for c in choices %}
+      <label class="choice">
+        <input type="radio" name="choice" value="{{ c }}" required>
+        {{ c }}
+      </label>
+      {% endfor %}
+    </div>
+
+    <label>Preferred Ewe translation (if not fully correct)
+      <input type="text" name="correction">
+    </label>
+    <label>Comment (optional)
+      <input type="text" name="comment">
+    </label>
+    <button type="submit">Save and next</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}
